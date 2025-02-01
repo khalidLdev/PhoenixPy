@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2  # Étape 1 : Récupérer le code
+      - name: Set up Python        # Étape 2 : Configurer Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'   # Version de Python à utiliser
+      - name: Install dependencies # Étape 3 : Installer les dépendances
+        run: |
+          python -m venv venv      # Créer un environnement virtuel
+          source venv/bin/activate # Activer l'environnement virtuel
+          pip install -r nest/requirements.txt  # Installer les dépendances
+          pip install pytest-cov   # Installer pytest-cov pour la couverture de code
+      - name: Run tests            # Étape 4 : Exécuter les tests
+        run: |
+          source venv/bin/activate
+          pytest --cov=feathers tests/  # Exécuter pytest avec la couverture de code
